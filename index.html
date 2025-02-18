@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwritten Digit Recognition</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .canvas-container { 
+            display: inline-block; 
+            margin: 20px; 
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        canvas { 
+            border: 2px solid #000; 
+            background-color: white; 
+            margin-bottom: 10px;
+        }
+        button { 
+            margin: 5px; 
+            padding: 8px 16px; 
+            font-size: 14px; 
+            cursor: pointer;
+        }
+        .prediction {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Multi-Digit Recognition (0-9)</h1>
+    <div id="canvas-grid">
+        <!-- Canvas 1 -->
+        <div class="canvas-container">
+            <canvas id="canvas1" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas1')">Clear</button>
+            <div class="prediction" id="prediction1">-</div>
+        </div>
+        
+        <!-- Canvas 2 -->
+        <div class="canvas-container">
+            <canvas id="canvas2" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas2')">Clear</button>
+            <div class="prediction" id="prediction2">-</div>
+        </div>
+        
+        <!-- Canvas 3 -->
+        <div class="canvas-container">
+            <canvas id="canvas3" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas3')">Clear</button>
+            <div class="prediction" id="prediction3">-</div>
+        </div>
+        
+        <!-- Canvas 4 -->
+        <div class="canvas-container">
+            <canvas id="canvas4" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas4')">Clear</button>
+            <div class="prediction" id="prediction4">-</div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <button onclick="predictDigits()" style="padding: 12px 24px; font-size: 16px;">
+            Predict All Digits
+        </button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
