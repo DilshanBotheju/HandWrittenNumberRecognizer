@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwritten Digit Recognition</title>
+    <link rel ="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Multi-Digit Recognition</h1>
+    <div id="canvas-grid">
+        <div class="canvas-container">
+            <canvas id="canvas1" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas1')">Clear</button>
+        </div>
+        <div class="canvas-container">
+            <canvas id="canvas2" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas2')">Clear</button>
+        </div>
+        <div class="canvas-container">
+            <canvas id="canvas3" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas3')">Clear</button>
+        </div>
+        <div class="canvas-container">
+            <canvas id="canvas4" width="140" height="140"></canvas>
+            <br>
+            <button onclick="clearCanvas('canvas4')">Clear</button>
+        </div>
+    </div>
+    <div id="prediction-grid">
+        <div class="prediction" id="prediction1">
+            -
+        </div>
+        <div class="prediction" id="prediction2">
+            -
+        </div>
+        <div class="prediction" id="prediction3">
+            -
+        </div>
+        <div class="prediction" id="prediction4">
+            -
+        </div>
+
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <button onclick="predictDigits()" style="padding: 12px 24px; font-size: 16px;">
+            Predict All Digits
+        </button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
