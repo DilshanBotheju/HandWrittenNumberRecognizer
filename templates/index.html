@@ -10,40 +10,47 @@
     <h1>Multi-Digit Recognition</h1>
     <div id="canvas-grid">
         <div class="canvas-container">
-            <canvas id="canvas1" width="140" height="140"></canvas>
+            <canvas id="canvas1" width="280" height="280"></canvas>
             <br>
             <button onclick="clearCanvas('canvas1')">Clear</button>
+            <button onclick="document.getElementById('imageInput1').click()">Add Image</button>
+            <input type="file" id="imageInput1" accept="image/*" style="display: none;" onchange="loadImage(event, 'canvas1')">
         </div>
         <div class="canvas-container">
-            <canvas id="canvas2" width="140" height="140"></canvas>
+            <canvas id="canvas2" width="280" height="280"></canvas>
             <br>
             <button onclick="clearCanvas('canvas2')">Clear</button>
+            <button onclick="document.getElementById('imageInput2').click()">Add Image</button>
+            <input type="file" id="imageInput2" accept="image/*" style="display: none;" onchange="loadImage(event, 'canvas2')">
         </div>
         <div class="canvas-container">
-            <canvas id="canvas3" width="140" height="140"></canvas>
+            <canvas id="canvas3" width="280" height="280"></canvas>
             <br>
             <button onclick="clearCanvas('canvas3')">Clear</button>
+            <button onclick="document.getElementById('imageInput3').click()">Add Image</button>
+            <input type="file" id="imageInput3" accept="image/*" style="display: none;" onchange="loadImage(event, 'canvas3')">
         </div>
         <div class="canvas-container">
-            <canvas id="canvas4" width="140" height="140"></canvas>
+            <canvas id="canvas4" width="280" height="280"></canvas>
             <br>
             <button onclick="clearCanvas('canvas4')">Clear</button>
+            <button onclick="document.getElementById('imageInput4').click()">Add Image</button>
+            <input type="file" id="imageInput4" accept="image/*" style="display: none;" onchange="loadImage(event, 'canvas4')">
         </div>
     </div>
     <div id="prediction-grid">
-        <div class="prediction" id="prediction1">
-            -
+        <div class="prediction-container">
+            <div class="prediction" id="prediction1">-</div>
         </div>
-        <div class="prediction" id="prediction2">
-            -
+        <div class="prediction-container">
+            <div class="prediction" id="prediction2">-</div>
         </div>
-        <div class="prediction" id="prediction3">
-            -
+        <div class="prediction-container">
+            <div class="prediction" id="prediction3">-</div>
         </div>
-        <div class="prediction" id="prediction4">
-            -
+        <div class="prediction-container">
+            <div class="prediction" id="prediction4">-</div>
         </div>
-
     </div>
     
     <div style="margin-top: 30px;">
@@ -53,5 +60,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>

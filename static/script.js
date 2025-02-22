@@ -9,7 +9,7 @@ function initCanvas(canvasId) {
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
 
-    // Setup drawing context
+    // Ensure a clean canvas initially
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.lineWidth = 10;
@@ -45,53 +45,74 @@ function initCanvas(canvasId) {
 function clearCanvas(canvasId) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Completely clear canvas
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     document.getElementById(`prediction${canvasId.slice(-1)}`).textContent = '-';
 }
 
+function isCanvasBlank(canvas) {
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    return imageData.every((pixel, index) => (index + 1) % 4 === 0 && pixel === 255);
+}
+
 async function predictDigits() {
     try {
         const formData = new FormData();
-        
-        // Convert all canvases to blobs
-        const blobPromises = [1, 2, 3, 4].map(num => 
-            new Promise(resolve => {
-                const canvas = document.getElementById(`canvas${num}`);
-                canvas.toBlob(blob => {
-                    resolve({ num, blob });
-                }, 'image/png');
-            })
-        );
+        let hasDrawing = false;
 
-        // Wait for all blobs to be created
-        const blobs = await Promise.all(blobPromises);
-        
-        // Add blobs to form data
-        blobs.forEach(({ num, blob }) => {
-            if (blob) formData.append(`image${num}`, blob, `digit${num}.png`);
-        });
+        for (let num of [1, 2, 3, 4]) {
+            const canvas = document.getElementById(`canvas${num}`);
+            const predictionElement = document.getElementById(`prediction${num}`);
 
-        // Send to backend
+            if (isCanvasBlank(canvas)) {
+                predictionElement.textContent = '-'; // Return "-" if no drawing
+                continue;
+            }
+
+            hasDrawing = true;
+            const dataURL = canvas.toDataURL('image/png');
+            const blob = await fetch(dataURL).then(res => res.blob());
+            formData.append(`image${num}`, blob, `digit${num}.png`);
+        }
+
+        if (!hasDrawing) {
+            alert("No drawings detected!");
+            return;
+        }
+
         const response = await fetch('/predict', {
             method: 'POST',
             body: formData,
         });
 
         const data = await response.json();
-        
-        // Update predictions
+
         data.predictions.forEach((pred, index) => {
             const predictionElement = document.getElementById(`prediction${index + 1}`);
-            predictionElement.textContent = pred || '?';
-            predictionElement.style.color = pred ? '#27ae60' : '#e74c3c';
+            predictionElement.textContent = pred || '-';
         });
 
     } catch (error) {
         console.error('Prediction error:', error);
         [1, 2, 3, 4].forEach(num => {
             document.getElementById(`prediction${num}`).textContent = 'Error!';
-            document.getElementById(`prediction${num}`).style.color = '#e74c3c';
         });
+    }
+    
+    function loadImage(event, canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext('2d');
+        const reader = new FileReader();
+        reader.onload = function() {
+            const img = new Image();
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
     }
 }

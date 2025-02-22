@@ -32,8 +32,20 @@ button {
     background-color: #000;
 }
 .prediction {
-    font-size: 18px;
+    font-size: 50px;
     font-weight: bold;
-    color: #2c3e50;
-    margin-top: 10px;
+    color: black;
+    margin-top: 40px;
+}
+
+.prediction-container{
+    display: inline-block; 
+    margin: 20px; 
+    padding: 12px;
+    border: 1px solid aqua;
+    background-color: aqua;
+    border-radius: 100px;
+    width: 140px;
+    height: 140px;
+
 }
