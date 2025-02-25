@@ -53,8 +53,11 @@ function clearCanvas(canvasId) {
 
 function isCanvasBlank(canvas) {
     const ctx = canvas.getContext('2d');
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    return imageData.every((pixel, index) => (index + 1) % 4 === 0 && pixel === 255);
+    const pixelBuffer = new Uint32Array(
+        ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+    );
+
+    return !pixelBuffer.some((pixel) => pixel !== 0xFFFFFFFF);
 }
 
 async function predictDigits() {
@@ -67,7 +70,7 @@ async function predictDigits() {
             const predictionElement = document.getElementById(`prediction${num}`);
 
             if (isCanvasBlank(canvas)) {
-                predictionElement.textContent = '-'; // Return "-" if no drawing
+                predictionElement.textContent = '-'; // No drawing detected
                 continue;
             }
 
@@ -87,11 +90,11 @@ async function predictDigits() {
             body: formData,
         });
 
-        const data = await response.json();
+        if (!response.ok) throw new Error("Server error");
 
-        data.predictions.forEach((pred, index) => {
-            const predictionElement = document.getElementById(`prediction${index + 1}`);
-            predictionElement.textContent = pred || '-';
+        const data = await response.json();
+        [1, 2, 3, 4].forEach((num, index) => {
+            document.getElementById(`prediction${num}`).textContent = data.predictions[index] || '-';
         });
 
     } catch (error) {
@@ -100,19 +103,22 @@ async function predictDigits() {
             document.getElementById(`prediction${num}`).textContent = 'Error!';
         });
     }
-    
-    function loadImage(event, canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d');
-        const reader = new FileReader();
-        reader.onload = function() {
-            const img = new Image();
-            img.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            };
-            img.src = reader.result;
+}
+
+// Function to load an image into a canvas
+function loadImage(event, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        const img = new Image();
+        img.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
-        reader.readAsDataURL(event.target.files[0]);
-    }
+        img.src = reader.result;
+    };
+
+    reader.readAsDataURL(event.target.files[0]);
 }
